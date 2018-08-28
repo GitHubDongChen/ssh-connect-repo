@@ -19,3 +19,6 @@ docker run --name ssh-connect-repo --link ssh-connect-db:mysql -p 22022:22022 -d
 
 # 数据库备份
 TODO
+
+# TODO List
+* connect脚本help信息
