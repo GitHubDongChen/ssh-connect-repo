@@ -22,9 +22,9 @@ do
             ;;
         P)
             PORT=$OPTARG
-			;;
+			      ;;
         u)
-			USER=$OPTARG
+			      USER=$OPTARG
             ;;
         p)
             PASSWD=$OPTARG
@@ -32,15 +32,15 @@ do
         ?)
             print_help
             exit 1
-			;;
+			      ;;
     esac
 done
 
 if [ -z ${HOST} ]
 then
-	echo "==> IP不能为空"
-	print_help
-	exit 1
+    echo "==> IP不能为空"
+    print_help
+    exit 1
 fi
 
 function find() {
