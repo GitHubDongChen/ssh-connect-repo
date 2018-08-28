@@ -1,0 +1,16 @@
+server:
+  port: 22022
+
+db:
+  host: 127.0.0.1
+  port: 3306
+  name: ssh-connect-db
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://${db.host}:${db.port}/${db.name}?useSSL=false
+    username: root
+    password: '00000000'
+  jpa:
+    generate-ddl: true
