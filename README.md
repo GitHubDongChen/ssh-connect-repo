@@ -1,5 +1,6 @@
 # 介绍
 > Mac only
+
 通过connect命令管理所有连接过的SSH机器
 
 # 运行步骤
