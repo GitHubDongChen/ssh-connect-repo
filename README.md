@@ -26,3 +26,4 @@ TODO
 # TODO List
 * connect脚本help信息
 * MySQL Docker 的数据备份
+* Dockerfile 提供 HEALTHCHECK 
