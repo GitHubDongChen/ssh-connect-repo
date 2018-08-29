@@ -26,7 +26,7 @@ docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD
 TODO
 
 # TODO List
-* connect脚本help信息
+* ~~connect脚本help信息~~
 * MySQL Docker 的数据备份
 * ~~Dockerfile 提供 HEALTHCHECK~~
 
