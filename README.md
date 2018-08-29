@@ -1,10 +1,7 @@
-# 介绍
-> Mac only
-
+# 介绍（macOS Only）
 通过connect命令管理所有连接过的SSH机器
 
 # 运行步骤
-
 1. 启动MySQL Docker容器
 ```bash
 docker run --name ssh-connect-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=00000000 -d mysql:5.7.23
