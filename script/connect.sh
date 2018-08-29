@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# 默认请求的仓库地址
-REPO_URL="http://127.0.0.1:22021"
-
 function script_help(){
     echo "TODO"
 	# echo "Usage: connect -h 192.168.1.1 "
@@ -24,6 +21,14 @@ function repo_save() {
     # ${4}=passwd
     curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
 }
+
+if [ -e ~/.ssh_repo/repo.conf ]
+then
+  source ~/.ssh_repo/repo.conf
+else
+  msg "缺少~/.ssh_repo/repo.conf文件"
+  exit 1
+fi
 
 # 设置默认值
 PORT=22

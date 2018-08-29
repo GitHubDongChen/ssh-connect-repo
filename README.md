@@ -17,7 +17,9 @@ docker run --name ssh-connect-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=00000000 -d
 docker run --name ssh-connect-repo --link ssh-connect-db:mysql -p 22022:22022 -d ydrdy/ssh-connect-repo:tag
 ```
 
-4. 将shell/connect.sh移动系统的PATH下（配置给脚本路径到PATH）
+4. 将`shell/connect.sh`移动系统的PATH下（配置给脚本路径到PATH）
+
+5. 将`script/repo.conf`移动到`~/.ssh_repo/`下
 
 
 # 数据库备份
@@ -26,4 +28,11 @@ TODO
 # TODO List
 * connect脚本help信息
 * MySQL Docker 的数据备份
-* Dockerfile 提供 HEALTHCHECK 
+* Dockerfile 提供 HEALTHCHECK
+
+# Change List
+## 0.1.3
+* 仓库地址不再通过connect脚本配置，而是通过~/.ssh_repo/repo.conf文件配置
+
+## 0.1.2
+* 脚本可以通过仓库服务的健康检查接口判断仓库服务是否可用
