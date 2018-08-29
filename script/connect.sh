@@ -50,7 +50,7 @@ do
 			      USER=$OPTARG
             ;;
         p)
-            msg "请输入密码"
+            msg "请提供密码"
             read -s PASSWD
             ;;
         ?)
