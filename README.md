@@ -26,6 +26,9 @@ docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD
 TODO
 
 # Change List
+## v0.2.2
+* 修复指定`-p`参数后无法通过校验的问题
+
 ## v0.2.1
 * 优化connect脚本，使密码不明文的显示在参数中
 
