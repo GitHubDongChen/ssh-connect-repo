@@ -1,9 +1,9 @@
 #!/bin/sh
 
 function script_help(){
-	echo "Usage: connect -h host_ip -p password [-u root] [-P 22]"
+	echo "Usage: connect -h host_ip [-p] [-u root] [-P 22]"
   echo "  -h 目标机器IP"
-  echo "  -p SSH密码"
+  echo "  -p 手动输入SSH密码，命令执行过程中会提示输入密码"
   echo "  -u SSH用户"
   echo "  -P SSH端口"
 }
@@ -36,7 +36,7 @@ USER='root'
 PASSWD=''
 
 # 解析输入参数
-while getopts h:P:u:p: option
+while getopts h:P:u:p option
 do 
     case "$option" in
         h)
@@ -49,7 +49,8 @@ do
 			      USER=$OPTARG
             ;;
         p)
-            PASSWD=$OPTARG
+            msg "请输入密码"
+            read -s PASSWD
             ;;
         ?)
             script_help
@@ -63,7 +64,12 @@ if [ -z ${HOST} ]
 then
     msg "host_ip 不能为空"
     script_help
-    exit 1
+    exit 4
+fi
+if [ -z ${PASSWD} ]
+then
+  msg "输入的密码不能为空"
+  exit 4
 fi
 
 # 检测仓库是否可用
@@ -75,7 +81,7 @@ then
 fi
 
 
-DB_PASSWD=`curl -s "${REPO_URL}/passwd?host=${HOST}&port=${PORT}&user=${PASSWD}"`
+DB_PASSWD=`curl -s "${REPO_URL}/passwd?host=${HOST}&port=${PORT}&user=${USER}"`
 if [ ${DB_PASSWD} ]
 then
     # 如果存在数据库的密码，且输入的密码为空
