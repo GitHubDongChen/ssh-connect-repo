@@ -14,7 +14,7 @@ docker run --name ssh-connect-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=00000000 -d
 
 3. 启动ssh-connect-repo Docker容器
 ```bash
-docker run --name ssh-connect-repo --link ssh-connect-db:mysql -p 22022:22022 -d ydrdy/ssh-connect-repo:tag
+docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD=00000000 -d ydrdy/ssh-connect-repo:tag
 ```
 
 4. 将`shell/connect.sh`移动系统的PATH下（配置给脚本路径到PATH）
