@@ -1,6 +1,7 @@
 #!/bin/sh
 
-REPO_URL="http://127.0.0.1:22022"
+# 默认请求的仓库地址
+REPO_URL="http://127.0.0.1:22021"
 
 print_help(){
     echo "TODO"
@@ -10,10 +11,26 @@ print_help(){
     # echo "-j 表示脚本执行完成登录ssh目标服务器"
 }
 
+# 通用打印函数
+print(){
+  echo "==> ${1}"
+}
+
+# 保存账号密码到仓库
+function save() {
+    # ${1}=host
+    # ${2}=port
+    # ${3}=user
+    # ${4}=passwd
+    curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
+}
+
+# 设置默认值
 PORT=22
 USER='root'
 PASSWD=''
 
+# 解析输入参数
 while getopts h:P:u:p: option
 do 
     case "$option" in
@@ -36,38 +53,27 @@ do
     esac
 done
 
+# 参数校验
 if [ -z ${HOST} ]
 then
-    echo "==> IP不能为空"
+    print "IP不能为空"
     print_help
     exit 1
 fi
 
-function find() {
-    # host port user
-    result=`curl -s "${REPO_URL}/passwd?host=${1}&port=${2}&user=${3}"`
-    if [ -z ${result} ]
-    then
-        # 找不到密码
-        return 0
-    else
-        DB_PASSWD=${result}
-        return 1
-    fi
-}
-
-function save() {
-    # host port user passwd
-    curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
-}
-
-DB_PASSWD=''
-find ${HOST} ${PORT} ${USER}
-# 返回码为1，数据库中存在密码
-# 返回码为0，数据库中无登录信息
-if [ $? -eq 1 ]
+# 检测仓库是否可用
+STATUS_CODE=`curl -o /dev/null -s -w %{http_code} "${REPO_URL}/actuator/health"`
+if [ ${STATUS_CODE} -ne 200 ]
 then
-    # 如果输入的密码为空，直接使用数据库的密码
+    print "仓库无法连接，请检查仓库地址"
+    exit 5
+fi
+
+
+DB_PASSWD=`curl -s "${REPO_URL}/passwd?host=${HOST}&port=${PORT}&user=${PASSWD}"`
+if [ ${DB_PASSWD} ]
+then
+    # 如果存在数据库的密码，且输入的密码为空
     if [ -z ${PASSWD} ]
     then
         echo ${DB_PASSWD} | pbcopy
