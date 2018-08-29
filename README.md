@@ -17,7 +17,7 @@ docker run --name ssh-connect-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=00000000 -d
 docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD=00000000 -d ydrdy/ssh-connect-repo:tag
 ```
 
-4. 将`shell/connect.sh`移动系统的PATH下（配置给脚本路径到PATH）
+4. 将`script/connect.sh`移动系统的PATH下（配置给脚本路径到PATH）
 
 5. 将`script/repo.conf`移动到`~/.ssh_repo/`下
 
