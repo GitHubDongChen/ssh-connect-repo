@@ -1,32 +1,32 @@
 #!/bin/sh
 
 function script_help(){
-    echo "TODO"
-	# echo "Usage: connect -h 192.168.1.1 "
-    # echo "-h 表示ssh目标服务器"
-    # echo "-u 表示执行远程操作用户"
-    # echo "-j 表示脚本执行完成登录ssh目标服务器"
+	echo "Usage: connect -h host_ip -p password [-u root] [-P 22]"
+  echo "  -h 目标机器IP"
+  echo "  -p SSH密码"
+  echo "  -u SSH用户"
+  echo "  -P SSH端口"
 }
 
-# 通用打印函数
+# 通用消息显示函数
 function msg(){
   echo "==> ${1}"
 }
 
 # 保存账号密码到仓库
 function repo_save() {
-    # ${1}=host
-    # ${2}=port
-    # ${3}=user
-    # ${4}=passwd
-    curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
+  # ${1} host
+  # ${2} port
+  # ${3} user
+  # ${4} passwd
+  curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
 }
 
 if [ -e ~/.ssh_repo/repo.conf ]
 then
   source ~/.ssh_repo/repo.conf
 else
-  msg "缺少~/.ssh_repo/repo.conf文件"
+  msg "缺少仓库配置文件[~/.ssh_repo/repo.conf]"
   exit 1
 fi
 
@@ -61,7 +61,7 @@ done
 # 参数校验
 if [ -z ${HOST} ]
 then
-    msg "IP不能为空"
+    msg "host_ip 不能为空"
     script_help
     exit 1
 fi
