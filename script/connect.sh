@@ -10,11 +10,11 @@ function script_help(){
 
 # 通用消息显示函数
 function msg(){
-  echo "==> ${1}"
+  echo "** ${1} **"
 }
 
 # 保存账号密码到仓库
-function repo_save() {
+function save_to_repo() {
   # ${1} host
   # ${2} port
   # ${3} user
@@ -25,6 +25,12 @@ function repo_save() {
     --data-urlencode "port=${2}" \
     --data-urlencode "user=${3}" \
     --data-urlencode "passwd=${4}"
+}
+
+function save_to_clipboard() {
+  # ${1} text
+  echo ${1} | pbcopy
+  msg "请在剪贴板中获取密码"
 }
 
 # 加载配置文件
@@ -76,7 +82,7 @@ then
 fi
 if [ -z "${PASSWD}" -a ${IS_INPUT} -eq 1 ]
 then
-  msg "输入的密码不能为空"
+  msg "密码不能为空"
   exit 4
 fi
 
@@ -95,33 +101,31 @@ then
   # 如果存在数据库的密码，且输入的密码为空
   if [ -z ${PASSWD} ]
   then
-    echo ${DB_PASSWD} | pbcopy
-    msg "数据库中找到登录信息"
-    msg "密码已经在剪贴板中，可直接粘贴"
+    msg "仓库已找到登录信息"
+    save_to_clipboard ${DB_PASSWD}
   else
     # 如果输入的密码不为空，且输入的密码与数据库中的密码不同，更新数据库的密码
     if [ ${DB_PASSWD} != ${PASSWD} ]
     then
-        repo_save ${HOST} ${PORT} ${USER} ${PASSWD}
-        msg "登录信息密码变更"
+        save_to_repo ${HOST} ${PORT} ${USER} ${PASSWD}
+        msg "登录信息已变更"
     fi
 
-    echo ${PASSWD} | pbcopy
-    msg "密码已经在剪贴板中，可直接粘贴"
+    save_to_clipboard ${PASSWD}
   fi
 else
   # 如果输入的密码为空，直接退出程序
   if [ -z ${PASSWD} ]
   then
-    msg "找不到登录信息"
-    exit 1
+    msg "未找到登录信息"
+    msg "请提供密码"
+    read -s PASSWD
   fi
 
-  # 新增记录，把当前登录信息保存到数据库中
-  repo_save ${HOST} ${PORT} ${USER} ${PASSWD}
-  echo ${PASSWD} | pbcopy
-  msg "新增登录信息"
-  msg "密码已经在剪贴板中，可直接粘贴"
+  # 新增记录，把当前登录信息保存到仓库中
+  save_to_repo ${HOST} ${PORT} ${USER} ${PASSWD}
+  msg "登录信息以保存"
+  save_to_clipboard ${PASSWD}
 fi
 
 ssh -p ${PORT} ${USER}@${HOST}
