@@ -81,7 +81,6 @@
           <tag>${project.version}</tag>
           <buildArgs>
             <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-            <STATUS_SCRIPT>script/status_check.sh</STATUS_SCRIPT>
           </buildArgs>
         </configuration>
       </plugin>
