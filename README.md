@@ -11,6 +11,9 @@ docker run --name ssh-connect-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=00000000 -d
 ```
 
 2. 构建ssh-connect-repo Docker镜像
+```bash
+mvn package
+```
 
 3. 启动ssh-connect-repo Docker容器
 ```bash
