@@ -3,7 +3,7 @@
 # 默认请求的仓库地址
 REPO_URL="http://127.0.0.1:22021"
 
-print_help(){
+function script_help(){
     echo "TODO"
 	# echo "Usage: connect -h 192.168.1.1 "
     # echo "-h 表示ssh目标服务器"
@@ -12,7 +12,7 @@ print_help(){
 }
 
 # 通用打印函数
-print(){
+function print(){
   echo "==> ${1}"
 }
 
@@ -47,7 +47,7 @@ do
             PASSWD=$OPTARG
             ;;
         ?)
-            print_help
+            my_help
             exit 1
 			      ;;
     esac
@@ -57,7 +57,7 @@ done
 if [ -z ${HOST} ]
 then
     print "IP不能为空"
-    print_help
+    my_help
     exit 1
 fi
 
