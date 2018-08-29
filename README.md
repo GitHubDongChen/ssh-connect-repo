@@ -25,11 +25,6 @@ docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD
 # 数据库备份
 TODO
 
-# TODO List
-* ~~connect脚本help信息~~
-* MySQL Docker 的数据备份
-* ~~Dockerfile 提供 HEALTHCHECK~~
-
 # Change List
 ## 0.2.0
 * 仓库地址不再通过connect脚本配置，而是通过~/.ssh_repo/repo.conf文件配置
