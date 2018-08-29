@@ -22,6 +22,7 @@ function repo_save() {
   curl -X "POST" "${REPO_URL}/save" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' --data-urlencode "host=${1}" --data-urlencode "port=${2}" --data-urlencode "user=${3}" --data-urlencode "passwd=${4}"
 }
 
+# 加载配置文件
 if [ -e ~/.ssh_repo/repo.conf ]
 then
   source ~/.ssh_repo/repo.conf
