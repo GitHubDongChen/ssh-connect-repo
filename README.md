@@ -33,6 +33,7 @@ TODO
 # Change List
 ## 0.1.3
 * 仓库地址不再通过connect脚本配置，而是通过~/.ssh_repo/repo.conf文件配置
+* Dockerfile 增加 HEALTHCHECK
 
 ## 0.1.2
 * 脚本可以通过仓库服务的健康检查接口判断仓库服务是否可用
