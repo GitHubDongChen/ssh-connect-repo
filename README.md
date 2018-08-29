@@ -26,7 +26,10 @@ docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD
 TODO
 
 # Change List
-## 0.2.0
+## v0.2.1
+* 优化connect脚本，使密码不明文的显示在参数中
+
+## v0.2.0
 * 仓库地址不再通过connect脚本配置，而是通过~/.ssh_repo/repo.conf文件配置
 * Dockerfile 增加 HEALTHCHECK
 * 脚本可以通过仓库服务的健康检查接口判断仓库服务是否可用
