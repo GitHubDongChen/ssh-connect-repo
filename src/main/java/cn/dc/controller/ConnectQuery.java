@@ -19,16 +19,28 @@ public class ConnectQuery {
   }
 
   @GetMapping("/passwd")
-  public ResponseEntity<String> findPasswd(
+  public ResponseEntity findPasswd(
       @RequestParam String host,
       @RequestParam(required = false, defaultValue = "22") Integer port,
-      @RequestParam(required = false, defaultValue = "root") String user) {
+      @RequestParam(required = false, defaultValue = "root") String user
+  ) {
 
     Optional<ConnectPO> result =
-        connectRepository.findById(new ConnectPO(host, port, user, null).getId());
+        connectRepository.findById(new ConnectPO(host, port, user, null, null).getId());
 
-    return result.map(po -> new ResponseEntity(po.getPasswd(), HttpStatus.OK))
-        .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+    return result.map(po -> new ResponseEntity<>(po.getPasswd(), HttpStatus.OK))
+        .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
+
+  @GetMapping("/passwd/by-alias")
+  public ResponseEntity<String> findPasswdByAlias(
+      @RequestParam String alias
+  ) {
+
+    Optional<ConnectPO> result = connectRepository.findByAlias(alias);
+
+    return result.map(po -> new ResponseEntity<>(po.getPasswd(), HttpStatus.OK))
+        .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
 

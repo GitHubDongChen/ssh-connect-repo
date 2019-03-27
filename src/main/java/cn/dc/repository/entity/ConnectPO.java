@@ -3,6 +3,7 @@ package cn.dc.repository.entity;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.StringJoiner;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,15 +18,17 @@ public class ConnectPO {
   private Integer port;
   private String user;
   private String passwd;
+  private String alias;
 
   protected ConnectPO() {
   }
 
-  public ConnectPO(String host, Integer port, String user, String passwd) {
+  public ConnectPO(String host, Integer port, String user, String passwd, String alias) {
     this.host = host;
     this.port = port;
     this.user = user;
     this.passwd = passwd;
+    this.alias = alias;
     generateId();
   }
 
@@ -75,16 +78,23 @@ public class ConnectPO {
     this.passwd = passwd;
   }
 
+  public String getAlias() {
+    return alias;
+  }
+
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
 
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer("ConnectPO{");
-    sb.append("id='").append(id).append('\'');
-    sb.append(", host='").append(host).append('\'');
-    sb.append(", port=").append(port);
-    sb.append(", user='").append(user).append('\'');
-    sb.append(", passwd='").append(passwd).append('\'');
-    sb.append('}');
-    return sb.toString();
+    return new StringJoiner(", ", ConnectPO.class.getSimpleName() + "[", "]")
+        .add("id='" + id + "'")
+        .add("host='" + host + "'")
+        .add("port=" + port)
+        .add("user='" + user + "'")
+        .add("passwd='" + passwd + "'")
+        .add("alias='" + alias + "'")
+        .toString();
   }
 }

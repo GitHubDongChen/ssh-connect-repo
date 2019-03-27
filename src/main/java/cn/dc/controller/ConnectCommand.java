@@ -2,6 +2,7 @@ package cn.dc.controller;
 
 import cn.dc.repository.ConnectRepository;
 import cn.dc.repository.entity.ConnectPO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,13 @@ public class ConnectCommand {
       @RequestParam String host,
       @RequestParam(required = false, defaultValue = "22") Integer port,
       @RequestParam(required = false, defaultValue = "root") String user,
-      @RequestParam String passwd) {
-
-    ConnectPO connectPO = new ConnectPO(host, port, user, passwd);
+      @RequestParam String passwd,
+      @RequestParam(required = false) String alias
+  ) {
+    if (StringUtils.isBlank(alias)) {
+      alias = host;
+    }
+    ConnectPO connectPO = new ConnectPO(host, port, user, passwd, alias);
     connectRepository.save(connectPO);
   }
 
