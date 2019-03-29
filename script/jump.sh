@@ -92,7 +92,7 @@ then
 fi
 
 # 检测仓库是否可用
-STATUS_CODE=`curl -o /dev/null -s -w %{http_code} "${REPO_URL}/actuator/health"`
+STATUS_CODE=`curl --connect-timeout 5 -o /dev/null -s -w %{http_code} "${REPO_URL}/actuator/health"`
 if [[ ${STATUS_CODE} -ne 200 ]]
 then
   msg "仓库无法连接，请检查仓库地址"
