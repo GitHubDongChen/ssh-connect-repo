@@ -83,13 +83,13 @@ then
   SSH_INFO=`curl -s --connect-timeout 5 "${REPO_URL}/alias/${1}"`
   if [[ ${SSH_INFO} ]]
   then
-    msg "仓库已找到<${USER}@${HOSTNAME}:${PORT}>登录信息"
-
     HOSTNAME=`echo ${SSH_INFO} | jq -r .host`
     PORT=`echo ${SSH_INFO} | jq -r .port`
     USER=`echo ${SSH_INFO} | jq -r .user`
     PASSWD=`echo ${SSH_INFO} | jq -r .passwd`
     ALIAS_DB=`echo ${SSH_INFO} | jq -r .alias`
+
+    msg "仓库已找到<${USER}@${HOSTNAME}:${PORT}>登录信息"
 
     if [[ ${ALIAS} && ${ALIAS_DB} != ${ALIAS} ]]
     then
