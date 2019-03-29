@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# 设置默认值
+PORT=22
+USER="root"
+PASSWD=${pwd}
+ALIAS=${a}
+
 # 常量
 T='true'
 readonly T
@@ -28,7 +34,7 @@ function contains_user() {
 
 function msg(){
   # 通用消息显示函数
-  echo "** ${1} **"
+  echo "\033[34m==>\033[0m \033[30m${1}\033[0m"
 }
 
 function save_to_repo() {
@@ -37,12 +43,14 @@ function save_to_repo() {
   # ${2} port
   # ${3} user
   # ${4} passwd
+  # ${5} alias
   curl -X "POST" "${REPO_URL}/save" \
     -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
     --data-urlencode "host=${1}" \
     --data-urlencode "port=${2}" \
     --data-urlencode "user=${3}" \
-    --data-urlencode "passwd=${4}"
+    --data-urlencode "passwd=${4}" \
+    --data-urlencode "alias=${5}"
 }
 
 function save_to_clipboard() {
@@ -75,21 +83,28 @@ then
   SSH_INFO=`curl -s --connect-timeout 5 "${REPO_URL}/alias/${1}"`
   if [[ ${SSH_INFO} ]]
   then
+    msg "仓库已找到<${USER}@${HOSTNAME}:${PORT}>登录信息"
+
     HOSTNAME=`echo ${SSH_INFO} | jq -r .host`
     PORT=`echo ${SSH_INFO} | jq -r .port`
     USER=`echo ${SSH_INFO} | jq -r .user`
     PASSWD=`echo ${SSH_INFO} | jq -r .passwd`
+    ALIAS_DB=`echo ${SSH_INFO} | jq -r .alias`
+
+    if [[ ${ALIAS} && ${ALIAS_DB} != ${ALIAS} ]]
+    then
+      save_to_repo ${HOSTNAME} ${PORT} ${USER} ${PASSWD} ${ALIAS}
+      msg "更新别名为<${ALIAS}>"
+    fi
+
     save_to_clipboard ${PASSWD}
     msg "请在剪贴板中获取密码"
+
+
     ssh -p ${PORT} ${USER}@${HOSTNAME}
     exit 0
   fi
 fi
-
-# 设置默认值
-PORT=22
-USER="root"
-PASSWD=${rsp}
 
 # 参数解析开始
 PORT_EXIST=${F}
@@ -142,23 +157,26 @@ for i in "$@"; do
     HOSTNAME=${i}
   fi
 done
-# 解析是否存在passwd变量
 # 参数解析结束
 
+# 查询数据库开始
 DB_PASSWD=`curl -s --connect-timeout 5 "${REPO_URL}/passwd?host=${HOSTNAME}&port=${PORT}&user=${USER}"`
 if [[ ${DB_PASSWD} ]]
 then
-  # 如果存在数据库的密码，且输入的密码为空
   if [[ -z ${PASSWD} ]]
-  then
+  then # 如果存在数据库的密码，且输入的密码为空
     msg "仓库已找到登录信息"
     save_to_clipboard ${DB_PASSWD}
     msg "请在剪贴板中获取密码"
-  else
-    # 如果输入的密码不为空，且输入的密码与数据库中的密码不同，更新数据库的密码
-    if [[ ${DB_PASSWD} != ${PASSWD} ]]
+    if [[ ${ALIAS} ]]
     then
-        save_to_repo ${HOSTNAME} ${PORT} ${USER} ${PASSWD}
+      save_to_repo ${HOSTNAME} ${PORT} ${USER} ${DB_PASSWD} ${ALIAS}
+      msg "更新别名为<${ALIAS}>"
+    fi
+  else
+    if [[ ${DB_PASSWD} != ${PASSWD} ]]
+    then # 如果输入的密码不为空，且输入的密码与数据库中的密码不同，更新数据库的密码
+        save_to_repo ${HOSTNAME} ${PORT} ${USER} ${PASSWD} ${ALIAS}
         msg "登录信息已变更"
     fi
 
@@ -166,25 +184,20 @@ then
     msg "请在剪贴板中获取密码"
   fi
 else
-  # 如果输入的密码为空，直接退出程序
   if [[ -z ${PASSWD} ]]
-  then
+  then # 如果输入的密码为空，直接退出程序
     msg "未找到登录信息"
-    msg "请提供密码"
+    msg "请提供<${USER}@${HOSTNAME}:${PORT}>密码"
     read -s PASSWD
   fi
 
   # 新增记录，把当前登录信息保存到仓库中
-  save_to_repo ${HOSTNAME} ${PORT} ${USER} ${PASSWD}
+  save_to_repo ${HOSTNAME} ${PORT} ${USER} ${PASSWD} ${ALIAS}
   msg "登录信息以保存"
   save_to_clipboard ${PASSWD}
-  msg "请在剪贴板中获取密码"e
+  msg "请在剪贴板中获取密码"
 fi
-
-#echo ${HOSTNAME}
-#echo ${PORT}
-#echo ${USER}
-#echo ${PASSWD}
+# 查询数据库结束
 
 if [[ ${PORT_EXIST} == ${T} && ${USER_EXIST} == ${T} ]]
 then
