@@ -1,14 +1,14 @@
 package cn.dc.repository;
 
-import cn.dc.repository.entity.ConnectPO;
+import cn.dc.repository.entity.Connect;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ConnectRepository extends CrudRepository<ConnectPO, String> {
+public interface ConnectRepository extends CrudRepository<Connect, String> {
 
   /**
    * 根据别名查找
    */
-  Optional<ConnectPO> findByAlias(String alias);
+  Optional<Connect> findByAlias(String alias);
 
 }

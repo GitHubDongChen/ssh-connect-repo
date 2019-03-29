@@ -1,7 +1,7 @@
 package cn.dc.controller;
 
 import cn.dc.repository.ConnectRepository;
-import cn.dc.repository.entity.ConnectPO;
+import cn.dc.repository.entity.Connect;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,11 +26,16 @@ public class ConnectCommand {
       @RequestParam String passwd,
       @RequestParam(required = false) String alias
   ) {
-    if (StringUtils.isBlank(alias)) {
-      alias = host;
+    if (StringUtils.isNotBlank(alias)) {
+      connectRepository.findByAlias(alias)
+          .ifPresent(connect -> {
+            connect.setAlias(null);
+            connectRepository.save(connect);
+          });
     }
-    ConnectPO connectPO = new ConnectPO(host, port, user, passwd, alias);
-    connectRepository.save(connectPO);
+
+    Connect connect = new Connect(host, port, user, passwd, alias);
+    connectRepository.save(connect);
   }
 
   @DeleteMapping("/del/{id}")

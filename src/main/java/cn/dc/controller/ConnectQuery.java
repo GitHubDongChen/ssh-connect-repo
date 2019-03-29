@@ -1,8 +1,7 @@
 package cn.dc.controller;
 
 import cn.dc.repository.ConnectRepository;
-import cn.dc.repository.entity.ConnectPO;
-import cn.dc.repository.entity.ConnectVO;
+import cn.dc.repository.entity.Connect;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,22 +26,21 @@ public class ConnectQuery {
       @RequestParam(required = false, defaultValue = "root") String user
   ) {
 
-    Optional<ConnectPO> result =
-        connectRepository.findById(new ConnectPO(host, port, user, null, null).getId());
+    Optional<Connect> result =
+        connectRepository.findById(new Connect(host, port, user, null, null).getId());
 
     return result.map(po -> new ResponseEntity<>(po.getPasswd(), HttpStatus.OK))
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
   @GetMapping("/alias/{alias}")
-  public ResponseEntity<ConnectVO> findPasswdByAlias(
+  public ResponseEntity<Connect> findPasswdByAlias(
       @PathVariable String alias
   ) {
 
-    Optional<ConnectPO> result = connectRepository.findByAlias(alias);
+    Optional<Connect> result = connectRepository.findByAlias(alias);
 
-    return result.map(po -> new ConnectVO(po.getHost(), po.getPort(), po.getUser(), po.getPasswd()))
-        .map(vo -> new ResponseEntity<>(vo, HttpStatus.OK))
+    return result.map(connect -> new ResponseEntity<>(connect, HttpStatus.OK))
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 

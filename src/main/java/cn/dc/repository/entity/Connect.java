@@ -1,5 +1,6 @@
 package cn.dc.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,9 +11,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "connect")
-public class ConnectPO {
+public class Connect {
 
   @Id
+  @JsonIgnore
   private String id;
   private String host;
   private Integer port;
@@ -20,10 +22,10 @@ public class ConnectPO {
   private String passwd;
   private String alias;
 
-  protected ConnectPO() {
+  protected Connect() {
   }
 
-  public ConnectPO(String host, Integer port, String user, String passwd, String alias) {
+  public Connect(String host, Integer port, String user, String passwd, String alias) {
     this.host = host;
     this.port = port;
     this.user = user;
@@ -88,7 +90,7 @@ public class ConnectPO {
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", ConnectPO.class.getSimpleName() + "[", "]")
+    return new StringJoiner(", ", Connect.class.getSimpleName() + "[", "]")
         .add("id='" + id + "'")
         .add("host='" + host + "'")
         .add("port=" + port)
