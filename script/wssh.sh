@@ -65,7 +65,25 @@ STATUS_CODE=`curl --connect-timeout 5 -o /dev/null -s -w %{http_code} "${REPO_UR
 if [[ ${STATUS_CODE} -ne 200 ]]
 then
   msg "仓库无法连接，请检查仓库地址:${REPO_URL}"
+  ssh $@
   exit 1
+fi
+
+# 根据别名查询ssh登录信息
+if [[ $# == 1 ]]
+then
+  SSH_INFO=`curl -s --connect-timeout 5 "${REPO_URL}/alias/${1}"`
+  if [[ ${SSH_INFO} ]]
+  then
+    HOSTNAME=`echo ${SSH_INFO} | jq -r .host`
+    PORT=`echo ${SSH_INFO} | jq -r .port`
+    USER=`echo ${SSH_INFO} | jq -r .user`
+    PASSWD=`echo ${SSH_INFO} | jq -r .passwd`
+    save_to_clipboard ${PASSWD}
+    msg "请在剪贴板中获取密码"
+    ssh -p ${PORT} ${USER}@${HOSTNAME}
+    exit 0
+  fi
 fi
 
 # 设置默认值
