@@ -2,6 +2,7 @@ package cn.dc.controller;
 
 import cn.dc.repository.ConnectRepository;
 import cn.dc.repository.entity.ConnectPO;
+import cn.dc.repository.entity.ConnectVO;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +35,14 @@ public class ConnectQuery {
   }
 
   @GetMapping("/alias/{alias}")
-  public ResponseEntity<String> findPasswdByAlias(
+  public ResponseEntity<ConnectVO> findPasswdByAlias(
       @PathVariable String alias
   ) {
 
     Optional<ConnectPO> result = connectRepository.findByAlias(alias);
 
-    return result.map(po -> new ResponseEntity<>(po.getPasswd(), HttpStatus.OK))
+    return result.map(po -> new ConnectVO(po.getHost(), po.getPort(), po.getUser(), po.getPasswd()))
+        .map(vo -> new ResponseEntity<>(vo, HttpStatus.OK))
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
   }
 
