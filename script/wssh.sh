@@ -149,17 +149,28 @@ for i in "$@"; do
     USER_EXIST=${T}
     HOSTNAME=${i#*@}
   else
-    if [[ HOSTNAME_INIT == ${T} ]]
+    if [[ ${HOSTNAME_INIT} == ${T} ]]
     then
       continue
     fi
 
     HOSTNAME=${i}
+    HOSTNAME_INIT=${T}
   fi
 done
 # 参数解析结束
 
 # 查询数据库开始
+SSH_INFO=`curl -s --connect-timeout 5 "${REPO_URL}/alias/${HOSTNAME}"`
+if [[ ${SSH_INFO} ]]
+then
+  HOSTNAME_DB=`echo ${SSH_INFO} | jq -r .host`
+  if [[ ${HOSTNAME} != HOSTNAME_DB ]]
+  then
+    msg "模式不支持，请替换${HOSTNAME}为${HOSTNAME_DB}，或者使用原始ssh命令"
+    exit 1
+  fi
+fi
 DB_PASSWD=`curl -s --connect-timeout 5 "${REPO_URL}/passwd?host=${HOSTNAME}&port=${PORT}&user=${USER}"`
 if [[ ${DB_PASSWD} ]]
 then
