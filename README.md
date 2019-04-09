@@ -17,22 +17,25 @@ mvn package
 docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD=00000000 -d ydrdy/ssh-connect-repo:tag
 ```
 
-4. 将`script/jump.sh`移动系统的PATH下（配置给脚本路径到PATH）
+4. 将`script/sshw.sh`移动系统的PATH下（配置给脚本路径到PATH）
 
 5. 将`script/repo.conf`移动到`~/.ssh_repo/`下
 
 # `wssh`使用教程
 ```bash
 # 建立新连接
-wssh root@10.10.10.10 -p 22
+sshw root@10.10.10.10 -p 22
 # 可简化为
-wssh 10.10.10.10
+sshw 10.10.10.10
 
 # 建立连接并添加别名
-a=my_alias wssh 10.10.10.10
+a=my_alias sshw 10.10.10.10
 
 # 更新已有别名
-a=new_alias wssh my_alias
+a=new_alias sshw my_alias
+
+# 指定连接密码
+pwd=passwd sshw root@10.10.10.10
 
 # 其他使用方法可以参考ssh命令
 ```
