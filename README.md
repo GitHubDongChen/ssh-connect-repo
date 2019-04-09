@@ -21,7 +21,7 @@ docker run --name repo --link ssh-connect-db:mysql -p 22022:22022 -e DB_PASSWORD
 
 5. 将`script/repo.conf`移动到`~/.ssh_repo/`下
 
-# `wssh`使用教程
+# `sshw`使用教程
 ```bash
 # 建立新连接
 sshw root@10.10.10.10 -p 22
