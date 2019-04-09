@@ -1,20 +1,21 @@
 package cn.dc.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.StringJoiner;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "connect")
+@Getter
+@Setter
+@ToString
+@Document(collection = "connect")
 public class Connect {
 
   @Id
-  @JsonIgnore
   private String id;
   private String host;
   private Integer port;
@@ -44,59 +45,4 @@ public class Connect {
     }
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public String getHost() {
-    return host;
-  }
-
-  public void setHost(String host) {
-    this.host = host;
-  }
-
-  public Integer getPort() {
-    return port;
-  }
-
-  public void setPort(Integer port) {
-    this.port = port;
-  }
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
-  }
-
-  public String getPasswd() {
-    return passwd;
-  }
-
-  public void setPasswd(String passwd) {
-    this.passwd = passwd;
-  }
-
-  public String getAlias() {
-    return alias;
-  }
-
-  public void setAlias(String alias) {
-    this.alias = alias;
-  }
-
-  @Override
-  public String toString() {
-    return new StringJoiner(", ", Connect.class.getSimpleName() + "[", "]")
-        .add("id='" + id + "'")
-        .add("host='" + host + "'")
-        .add("port=" + port)
-        .add("user='" + user + "'")
-        .add("passwd='" + passwd + "'")
-        .add("alias='" + alias + "'")
-        .toString();
-  }
 }

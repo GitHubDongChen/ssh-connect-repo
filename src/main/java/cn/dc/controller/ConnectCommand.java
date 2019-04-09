@@ -2,6 +2,7 @@ package cn.dc.controller;
 
 import cn.dc.repository.ConnectRepository;
 import cn.dc.repository.entity.Connect;
+import cn.dc.util.Crypto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +15,11 @@ public class ConnectCommand {
 
   private ConnectRepository connectRepository;
 
-  public ConnectCommand(ConnectRepository connectRepository) {
+  private Crypto crypto;
+
+  public ConnectCommand(ConnectRepository connectRepository, Crypto crypto) {
     this.connectRepository = connectRepository;
+    this.crypto = crypto;
   }
 
   @PostMapping("/save")
@@ -34,7 +38,7 @@ public class ConnectCommand {
           });
     }
 
-    Connect connect = new Connect(host, port, user, passwd, alias);
+    Connect connect = new Connect(host, port, user, crypto.encrypt(passwd), alias);
     connectRepository.save(connect);
   }
 
