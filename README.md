@@ -4,7 +4,8 @@
 # 运行步骤
 1. 启动MongoDB Docker容器
 ```bash
-docker run -p 27017:27017 --name ssh-connect-mongodb -d mongo:4
+docker run -d -v /data/db --name mongo-dvc centos:7.6.1810
+docker run --volumes-from mongo-dvc -p 27017:27017 --name ssh-connect-mongodb -d mongo:4
 ```
 
 2. 构建ssh-connect-repo Docker镜像
