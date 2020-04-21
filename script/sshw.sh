@@ -34,7 +34,7 @@ function contains_user() {
 
 function msg(){
   # 通用消息显示函数
-  echo "\033[34m==>\033[0m \033[30m${1}\033[0m"
+  echo "==> ${1}"
 }
 
 function save_to_repo() {
