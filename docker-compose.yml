@@ -1,0 +1,14 @@
+version: '3'
+services:
+#  docker run --volumes-from mongo-dvc -p 27017:27017 --name ssh-connect-mongodb -d mongo:4
+  ssh-connect-mongodb:
+    image: library/mongo:4
+    ports:
+      - "27017:27017"
+#  docker run --name repo --link ssh-connect-mongodb:mongodb -p 22022:22022 -d ydrdy/ssh-connect-repo:tag
+  ssh-connect-repo:
+    image: ydrdy/ssh-connect-repo:0.3.0
+    ports:
+      - "22022:22022"
+    links:
+      - ssh-connect-mongodb:mongodb
